@@ -11,7 +11,7 @@
 drum and bass:
     - d(rum)?[ &n/]*b(ass)?
 
-# rhythm and blues (r&b, rnb, ...)
+# rhythm and blues (r&b, rnb, rhythm/blues, ...)
 rhythm and blues:
     - r(hythm)?[ &n/]*b(lues)?
 
@@ -28,27 +28,27 @@ rock and roll:
 # Matches: kpop, k pop -> k-pop; j rock -> j-rock;
 #
 \g<1>-\g<2>:
-    - (c|k|j)[ /]*(folk|goth|pop|rock|ska|trance)
+    - (c|k|j) *(folk|goth|pop|rock|ska|trance)
 
 # post-rock, post-punk, post-metal, etc. (post rock -> post-rock)
 post-\g<1>:
-    - post[ /]+(\w+)
+    - post +(\w+)
 
 # lo-fi, glo-fi (lofi, lo fi -> lo-fi)
 lo-fi:
-    - (g?lo)[ /]*fi
+    - (g?lo) *fi
 
 # p-funk, g-funk, etc. (p funk -> p-funk)
 \g<1>-funk:
-    - (p|g)[ /]*funk
+    - (p|g) *funk
 
 # synthpop, synthwave, etc. (synth pop -> synthpop)
 synth\g<1>:
-    - synth[ /-]+(\w+)
+    - synth[ -]+(\w+)
 
 # avant-garde (avantgarde, avant gard, avant-gard)
 avant-garde:
-    - avant[ /]*(gard(e)?)?
+    - avant *(gard(e)?)?
     - avant-gard
     - avant
 
@@ -59,7 +59,7 @@ avant-garde:
 # Matches: nu-jazz -> nu jazz; nu disco -> nu disco
 # Note: 'nu-disco' is hyphenated in the tree but 'nu jazz' isn't in genres.txt
 nu \g<1>:
-    - nu[ /-]*(disco|jazz|metal|soul)
+    - nu[ -]*(disco|jazz|metal|soul)
 
 # ---------------------------------------------------------------------------
 # Terminology / Synonym / Translation fixes
@@ -67,7 +67,7 @@ nu \g<1>:
 
 # electronic (electronic music, elektronika)
 electronic:
-    - electronic[ /]music
+    - electronic music
 
 # world music (world)
 world music:
@@ -75,15 +75,15 @@ world music:
 
 # chillout (chill, chill out, chill-out)
 chillout:
-    - chill([ /-]*out)?
+    - chill([ -]*out)?
 
 # darkwave (dark wave)
 darkwave:
-    - dark[ /-]*wave
+    - dark[ -]*wave
 
 # downtempo (downbeat)
 downtempo:
-    - down[ /-]*beat
+    - down[ -]*beat
 
 # shoegaze (shoegazer, shoegazing)
 shoegaze:
@@ -96,7 +96,7 @@ shoegaze:
 
 # Normalized spacing: hip-hop, hiphop -> hip hop
 \g<1> hop:
-    - (glitch|hip|jazz|trip)y?([ /-]*hip)?[ /-]*hop
+    - (glitch|hip|jazz|trip)y?([ -]*hip)?[ -]*hop
 
 # ---------------------------------------------------------------------------
 # Abbreviations & International Spellings
@@ -104,31 +104,31 @@ shoegaze:
 
 # blues rock (blues-rock)
 blues rock:
-    - blues[ /-]*rock
+    - blues[ -]*rock
 
 # folk rock (folk-rock)
 folk rock:
-    - folk[ /-]*rock
+    - folk[ -]*rock
 
 # alternative rock (alt, alternative, alt rock, alternative rock, ...)
 alternative rock:
-    - alt([ /-]*rock)?
-    - alternative([ /-]*rock)?
+    - alt([ -]*rock)?
+    - alternative([ -]*rock)?
 
 # indie rock (indie, indie rock)
 indie rock:
-    - indie([ /-]*rock)?
+    - indie([ -]*rock)?
 
 # gothic rock (goth, goth rock) - doesn't catch gothic metal
 gothic rock:
-    - goth(?!ic)([ /-]*rock)?
-    - gothic[ /-]*rock
+    - goth(?!ic)([ -]*rock)?
+    - gothic[ -]*rock
 
 # progressive rock (prog, prog rock, progressive rock)
 # Note: mapping standalone 'progressive' is avoided to prevent catching 'progressive metal', etc.
 progressive rock:
-    - prog([ /-]*rock)?
-    - progressive[ /-]*rock
+    - prog([ -]*rock)?
+    - progressive[ -]*rock
 
 # traditional folk (trad, traditional)
 # Note: avoids matching 'trad jazz' or 'traditional country'.
