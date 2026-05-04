@@ -24,11 +24,15 @@ rock and roll:
 # ---------------------------------------------------------------------------
 
 
-# Hyphenate j-pop, k-pop, c-pop, post-rock, etc.
-# Matches: kpop, k pop -> k-pop; j rock -> j-rock; post rock -> post-rock
+# Hyphenate j-pop, k-pop, c-pop, etc.
+# Matches: kpop, k pop -> k-pop; j rock -> j-rock;
 #
 \g<1>-\g<2>:
     - (c|k|j)[ /-]*(folk|goth|pop|rock|ska|trance)
+
+# post-rock, post-punk, post-metal, etc. (post rock -> post-rock)
+post-\g<1>:
+    - post[ /]+(\w+)
 
 # lo-fi, glo-fi (lofi, lo fi -> lo-fi)
 lo-fi:
