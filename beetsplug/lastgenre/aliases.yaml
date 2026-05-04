@@ -28,7 +28,7 @@ rock and roll:
 # Matches: kpop, k pop -> k-pop; j rock -> j-rock;
 #
 \g<1>-\g<2>:
-    - (c|k|j)[ /-]*(folk|goth|pop|rock|ska|trance)
+    - (c|k|j)[ /]*(folk|goth|pop|rock|ska|trance)
 
 # post-rock, post-punk, post-metal, etc. (post rock -> post-rock)
 post-\g<1>:
@@ -36,11 +36,11 @@ post-\g<1>:
 
 # lo-fi, glo-fi (lofi, lo fi -> lo-fi)
 lo-fi:
-    - (g?lo)[ /-]*fi
+    - (g?lo)[ /]*fi
 
 # p-funk, g-funk, etc. (p funk -> p-funk)
 \g<1>-funk:
-    - (p|g)[ /-]*funk
+    - (p|g)[ /]*funk
 
 # synthpop, synthwave, etc. (synth pop -> synthpop)
 synth\g<1>:
@@ -48,7 +48,7 @@ synth\g<1>:
 
 # avant-garde (avantgarde, avant gard, avant-gard)
 avant-garde:
-    - avant[ /-]*(gard(e)?)?
+    - avant[ /]*(gard(e)?)?
     - avant-gard
     - avant
 
