@@ -739,7 +739,7 @@ class TestIgnorelist:
 
         logger = Mock()
 
-        # Set up compiled ignore_patterns directly (skipping file parsing)
+        # Set up compiled patterns directly (skipping file parsing)
         ignore_patterns = defaultdict(list)
         for artist_name, patterns in ignorelist_dict.items():
             ignore_patterns[artist_name.lower()] = [
