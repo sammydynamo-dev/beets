@@ -116,7 +116,47 @@ def sort_by_depth(tags: list[str], branches: CanonTree) -> list[str]:
 
 WHITELIST = os.path.join(os.path.dirname(__file__), "genres.txt")
 C14N_TREE = os.path.join(os.path.dirname(__file__), "genres-tree.yaml")
-ALIASES = os.path.join(os.path.dirname(__file__), "aliases.yaml")
+
+# Default genre aliases for normalization.
+ALIASES_DEFAULT: dict[str, list[str]] = {
+    "drum and bass": ["d(rum)?[ &n/]*b(ass)?"],
+    "rhythm and blues": ["r(hythm)?[ &n/]*b(lues)?"],
+    "rock and roll": ["rock[ '\u2010&n/-]*roll"],
+    r"\g<1>-\g<2>": ["(c|k|j) *(folk|goth|pop|rock|ska|trance)"],
+    r"post-\g<1>": [r"post +(\w+)"],
+    "lo-fi": ["(g?lo) *fi"],
+    r"\g<1>-funk": ["(p|g) *funk"],
+    r"synth\g<1>": [r"synth[ -]+(\w+)"],
+    "avant-garde": [
+        "avant *(gard(e)?)?",
+        "avant-gard",
+        "avant",
+    ],
+    r"nu \g<1>": ["nu[ -]*(disco|jazz|metal|soul)"],
+    "electronic": ["electronic music"],
+    "world music": ["world"],
+    "chillout": ["chill([ -]*out)?"],
+    "darkwave": ["dark[ -]*wave"],
+    "downtempo": ["down[ -]*beat"],
+    "shoegaze": ["shoegaze?r?", "shoegazing"],
+    r"\g<1> hop": ["(glitch|hip|jazz|trip)y?([ -]*hip)?[ -]*hop"],
+    "blues rock": ["blues[ -]*rock"],
+    "folk rock": ["folk[ -]*rock"],
+    "alternative rock": [
+        "alt([ -]*rock)?",
+        "alternative([ -]*rock)?",
+    ],
+    "indie rock": ["indie([ -]*rock)?"],
+    "gothic rock": [
+        "goth(?!ic)([ -]*rock)?",
+        "gothic[ -]*rock",
+    ],
+    "progressive rock": [
+        "prog([ -]*rock)?",
+        "progressive[ -]*rock",
+    ],
+    "traditional folk": ["trad(/|ition(/|al)?)?-?"],
+}
 
 
 class LastGenrePlugin(plugins.BeetsPlugin):
@@ -262,8 +302,8 @@ class LastGenrePlugin(plugins.BeetsPlugin):
         The key (genre name) is used as a ``re.Match.expand()`` template,
         so ``\\g<N>`` back-references to capture groups are supported.
 
-        Setting ``aliases: true`` (the default) loads the bundled
-        ``aliases.yaml`` file. Setting ``aliases: false`` disables
+        Setting ``aliases: true`` (the default) uses the bundled alias table.
+        Setting ``aliases: false`` disables
         normalization entirely.
 
         Raises:
@@ -274,11 +314,7 @@ class LastGenrePlugin(plugins.BeetsPlugin):
         if aliases_raw is False:
             return []
         if aliases_raw in (True, "", None):
-            self._log.debug("Loading default aliases from {}", ALIASES)
-            with Path(ALIASES).open(encoding="utf-8") as f:
-                aliases_dict = yaml.safe_load(f)
-            if not aliases_dict:
-                return []
+            aliases_dict = ALIASES_DEFAULT
         else:
             # aliases defaults to True (unlike ignorelist), so MappingValues
             # would raise on the boolean default layer.
