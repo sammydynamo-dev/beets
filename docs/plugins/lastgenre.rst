@@ -226,13 +226,20 @@ uses an ordered list of regular expression aliases to map these variants to a
 single canonical name *before* any other filtering or canonicalization takes
 place.
 
-This feature is enabled by default (``aliases: yes``) and uses a bundled
-``aliases.yaml`` file which covers many common cases, such as mapping "dnb" to
-"drum and bass" or "r&b" to "rhythm and blues".
+This feature is enabled by default (``aliases: yes``) and uses a bundled default
+alias table, which covers many common cases, such as mapping "dnb" to "drum and
+bass" or "r&b" to "rhythm and blues".
 
-You can extend or override these aliases in your configuration. The keys are the
-canonical genre names (which support ``\g<1>`` back-references to regex capture
-groups) and the values are lists of regex patterns:
+The full default list is shown below:
+
+.. literalinclude:: ../../beetsplug/lastgenre/__init__.py
+    :language: python
+    :start-after: # [[[doc:ALIASES_DEFAULT]]]
+    :end-before: # [[[end:ALIASES_DEFAULT]]]
+
+You can override these aliases in your configuration. The keys are the canonical
+genre names (which support ``\g<1>`` back-references to regex capture groups)
+and the values are lists of regex patterns:
 
 ::
 

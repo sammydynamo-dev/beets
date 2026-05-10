@@ -118,6 +118,7 @@ WHITELIST = os.path.join(os.path.dirname(__file__), "genres.txt")
 C14N_TREE = os.path.join(os.path.dirname(__file__), "genres-tree.yaml")
 
 # Default genre aliases for normalization.
+# [[[doc:ALIASES_DEFAULT]]]
 ALIASES_DEFAULT: dict[str, list[str]] = {
     "drum and bass": ["d(rum)?[ &n/]*b(ass)?"],
     "rhythm and blues": ["r(hythm)?[ &n/]*b(lues)?"],
@@ -157,6 +158,7 @@ ALIASES_DEFAULT: dict[str, list[str]] = {
     ],
     "traditional folk": ["trad(/|ition(/|al)?)?-?"],
 }
+# [[[end:ALIASES_DEFAULT]]]
 
 
 class LastGenrePlugin(plugins.BeetsPlugin):
