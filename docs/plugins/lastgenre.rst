@@ -226,9 +226,10 @@ uses an ordered list of regular expression aliases to map these variants to a
 single canonical name *before* any other filtering or canonicalization takes
 place.
 
-This feature is enabled by default (``aliases: yes``) and uses a bundled default
-alias table, which covers many common cases, such as mapping "dnb" to "drum and
-bass" or "r&b" to "rhythm and blues".
+This feature is enabled by default (``enable_aliases: yes``) and uses a bundled
+default alias table, which covers many common cases, such as mapping "dnb" to
+"drum and bass" or "r&b" to "rhythm and blues". Set ``enable_aliases: no`` to
+turn it off entirely.
 
 The full default list is shown below:
 
@@ -316,6 +317,12 @@ file. The available options are:
 - **ignorelist**: A mapping of artist names (or the global ``'*'`` key) to lists
   of genres to exclude. See `Genre Ignorelist`_ for more details. Default:
   ``no``.
+- **enable_aliases**: Enable genre alias normalization. Set to ``no`` to
+  disable. Default: ``yes``.
+- **aliases**: A mapping of canonical genre names to lists of regex patterns
+  used for alias normalization. Overrides the built-in ``ALIASES_DEFAULT`` table
+  entirely. See `Genre Normalization (Aliases)`_ for details. Default: built-in
+  table.
 
 Running Manually
 ----------------

@@ -181,7 +181,8 @@ class LastGenrePlugin(plugins.BeetsPlugin):
                 "title_case": True,
                 "pretend": False,
                 "ignorelist": {},
-                "aliases": True,
+                "enable_aliases": True,
+                "aliases": ALIASES_DEFAULT,
             }
         )
         self.setup()
@@ -292,39 +293,22 @@ class LastGenrePlugin(plugins.BeetsPlugin):
         """Load the genre alias table from the beets config.
 
         Reads ``lastgenre.aliases`` as a mapping of genre names to lists of
-        regex patterns::
-
-            lastgenre:
-                aliases:
-                    drum and bass:
-                        - d(rum)?[ &n/]*b(ass)?
-                    \\g<1> hop:
-                        - (glitch|hip|jazz|trip)y?[ /-]*hop
+        regex patterns. The default table is ``ALIASES_DEFAULT``.
+        Set ``enable_aliases: no`` to disable normalization entirely.
 
         The key (genre name) is used as a ``re.Match.expand()`` template,
         so ``\\g<N>`` back-references to capture groups are supported.
-
-        Setting ``aliases: true`` (the default) uses the bundled alias table.
-        Setting ``aliases: false`` disables
-        normalization entirely.
 
         Raises:
             confuse.ConfigTypeError: when the config value is not a mapping
             or a list entry is not a string.
         """
-        aliases_raw = self.config["aliases"].get()
-        if aliases_raw is False:
+        if not self.config["enable_aliases"].get(bool):
             return []
-        if aliases_raw in (True, "", None):
-            aliases_dict = ALIASES_DEFAULT
-        else:
-            # aliases defaults to True (unlike ignorelist), so MappingValues
-            # would raise on the boolean default layer.
-            aliases_cfg = confuse.Configuration("lastgenre_aliases", read=False)
-            aliases_cfg.set({"aliases": aliases_raw})
-            aliases_dict = aliases_cfg["aliases"].get(
-                confuse.MappingValues(confuse.Sequence(str))
-            )
+
+        aliases_dict = self.config["aliases"].get(
+            confuse.MappingValues(confuse.Sequence(str))
+        )
 
         entries: GenreAliasPatterns = []
         for canonical, patterns in aliases_dict.items():

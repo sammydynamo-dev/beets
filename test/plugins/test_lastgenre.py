@@ -23,7 +23,7 @@ import pytest
 
 from beets.library import Album
 from beets.test import _common
-from beets.test.helper import IOMixin, PluginTestCase
+from beets.test.helper import ConfigMixin, IOMixin, PluginTestCase
 from beetsplug import lastgenre
 from beetsplug.lastgenre.utils import is_ignored, normalize_genre
 
@@ -280,13 +280,13 @@ class LastGenrePluginTest(IOMixin, PluginTestCase):
 
 
 @pytest.fixture
-def config(config):
+def config():
     """Provide a fresh beets configuration for every test/parameterize call
 
     This is necessary to prevent the following parameterized test to bleed
     config test state in between test cases.
     """
-    return config
+    return ConfigMixin().config
 
 
 @pytest.mark.parametrize(
@@ -1004,11 +1004,11 @@ class TestAliases:
         )
 
     def test_disabled(self, config):
-        """With aliases: false, no normalization is performed."""
+        """With enable_aliases: false, no normalization is performed."""
         config["lastgenre"]["ignorelist"] = (
             False  # prevent state leak from earlier tests
         )
-        config["lastgenre"]["aliases"] = False
+        config["lastgenre"]["enable_aliases"] = False
         plugin = lastgenre.LastGenrePlugin()
         assert plugin.alias_patterns == []
         # normalize_genre with an empty list must return the genre unchanged.
@@ -1070,7 +1070,8 @@ class TestAliases:
     def test_default_aliases_logic(self, config, input_genre, expected_genre):
         """Verify that bundled aliases.yaml correctly handles common variants."""
         config["lastgenre"]["ignorelist"] = False
-        config["lastgenre"]["aliases"] = True
+        config["lastgenre"]["enable_aliases"] = True
+        config["lastgenre"]["aliases"] = lastgenre.ALIASES_DEFAULT
         plugin = lastgenre.LastGenrePlugin()
         result = normalize_genre(
             plugin._log, plugin.alias_patterns, input_genre
