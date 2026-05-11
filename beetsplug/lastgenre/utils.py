@@ -24,10 +24,10 @@ if TYPE_CHECKING:
     from beets.logging import BeetsLogger
 
     GenreIgnorePatterns = dict[str, list[re.Pattern[str]]]
-    """Mapping of artist name to list of compiled case-insensitive patterns."""
+    """Mapping of artist key to list of compiled case-insensitive patterns."""
 
-    GenreAliasPatterns = list[tuple[re.Pattern[str], str]]
-    """Ordered list of (pattern, replacement_template) alias entries."""
+    AliasPatternWithReplacement = tuple[re.Pattern[str], str]
+    """A compiled alias regex paired with replacement template string."""
 
 
 def compile_pattern(pattern: str) -> re.Pattern[str]:
@@ -62,7 +62,9 @@ def is_ignored(
 
 
 def normalize_genre(
-    logger: BeetsLogger, alias_patterns: GenreAliasPatterns, genre: str
+    logger: BeetsLogger,
+    alias_patterns: list[AliasPatternWithReplacement],
+    genre: str,
 ) -> str:
     """Return the canonical form of *genre* using *alias_patterns*.
 

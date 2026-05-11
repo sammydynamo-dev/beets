@@ -51,7 +51,7 @@ if TYPE_CHECKING:
     from beets.importer import ImportSession, ImportTask
     from beets.library import LibModel
 
-    from .utils import GenreAliasPatterns, GenreIgnorePatterns
+    from .utils import AliasPatternWithReplacement, GenreIgnorePatterns
 
     Whitelist = set[str]
     """Set of valid genre names (lowercase). Empty set means all genres allowed."""
@@ -196,7 +196,9 @@ class LastGenrePlugin(plugins.BeetsPlugin):
         self.c14n_branches: CanonTree
         self.c14n_branches, self.canonicalize = self._load_c14n_tree()
         self.ignore_patterns: GenreIgnorePatterns = self._load_ignorelist()
-        self.alias_patterns: GenreAliasPatterns = self._load_aliases()
+        self.alias_patterns: list[AliasPatternWithReplacement] = (
+            self._load_aliases()
+        )
         self.client = LastFmClient(
             self._log,
             self.config["min_weight"].get(int),
@@ -289,7 +291,7 @@ class LastGenrePlugin(plugins.BeetsPlugin):
 
         return compiled_ignorelist
 
-    def _load_aliases(self) -> GenreAliasPatterns:
+    def _load_aliases(self) -> list[AliasPatternWithReplacement]:
         """Load the genre alias table from the beets config.
 
         Reads ``lastgenre.aliases`` as a mapping of genre names to lists of
@@ -310,7 +312,7 @@ class LastGenrePlugin(plugins.BeetsPlugin):
             confuse.MappingValues(confuse.Sequence(str))
         )
 
-        entries: GenreAliasPatterns = []
+        entries: list[AliasPatternWithReplacement] = []
         for canonical, patterns in aliases_dict.items():
             template = str(canonical).lower()
             for raw_pat in patterns:
