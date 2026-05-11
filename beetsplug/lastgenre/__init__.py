@@ -51,7 +51,7 @@ if TYPE_CHECKING:
     from beets.importer import ImportSession, ImportTask
     from beets.library import LibModel
 
-    from .utils import AliasPatternWithReplacement, GenreIgnorePatterns
+    from .utils import AliasPatternWithReplacement, IgnorePatternsByArtist
 
     Whitelist = set[str]
     """Set of valid genre names (lowercase). Empty set means all genres allowed."""
@@ -195,7 +195,7 @@ class LastGenrePlugin(plugins.BeetsPlugin):
         self.whitelist: Whitelist = self._load_whitelist()
         self.c14n_branches: CanonTree
         self.c14n_branches, self.canonicalize = self._load_c14n_tree()
-        self.ignore_patterns: GenreIgnorePatterns = self._load_ignorelist()
+        self.ignore_patterns: IgnorePatternsByArtist = self._load_ignorelist()
         self.alias_patterns: list[AliasPatternWithReplacement] = (
             self._load_aliases()
         )
@@ -247,7 +247,7 @@ class LastGenrePlugin(plugins.BeetsPlugin):
             flatten_tree(genres_tree, [], c14n_branches)
         return c14n_branches, canonicalize
 
-    def _load_ignorelist(self) -> GenreIgnorePatterns:
+    def _load_ignorelist(self) -> IgnorePatternsByArtist:
         r"""Load patterns from configuration and compile them.
 
         Mapping of artist names to regex or literal patterns. Use the
@@ -278,7 +278,7 @@ class LastGenrePlugin(plugins.BeetsPlugin):
             confuse.MappingValues(confuse.Sequence(str))
         )
 
-        compiled_ignorelist: GenreIgnorePatterns = defaultdict(list)
+        compiled_ignorelist: IgnorePatternsByArtist = defaultdict(list)
         for artist, patterns in raw_ignorelist.items():
             artist_patterns = [compile_pattern(p) for p in patterns]
             self._log.extra_debug(

@@ -33,7 +33,7 @@ if TYPE_CHECKING:
     from beets.library import LibModel
     from beets.logging import BeetsLogger
 
-    from .utils import AliasPatternWithReplacement, GenreIgnorePatterns
+    from .utils import AliasPatternWithReplacement, IgnorePatternsByArtist
 
     GenreCache = dict[str, list[str]]
     """Cache mapping entity keys to their genre lists.
@@ -68,7 +68,7 @@ class LastFmClient:
         self,
         log: BeetsLogger,
         min_weight: int,
-        ignore_patterns: GenreIgnorePatterns,
+        ignore_patterns: IgnorePatternsByArtist,
         alias_patterns: list[AliasPatternWithReplacement],
     ):
         """Initialize the client.
@@ -78,7 +78,7 @@ class LastFmClient:
         """
         self._log = log
         self._min_weight = min_weight
-        self._ignore_patterns: GenreIgnorePatterns = ignore_patterns
+        self._ignore_patterns: IgnorePatternsByArtist = ignore_patterns
         self._alias_patterns: list[AliasPatternWithReplacement] = alias_patterns
         self._genre_cache: GenreCache = {}
 

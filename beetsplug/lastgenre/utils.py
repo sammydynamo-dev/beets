@@ -23,7 +23,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from beets.logging import BeetsLogger
 
-    GenreIgnorePatterns = dict[str, list[re.Pattern[str]]]
+    IgnorePatternsByArtist = dict[str, list[re.Pattern[str]]]
     """Mapping of artist key to list of compiled case-insensitive patterns."""
 
     AliasPatternWithReplacement = tuple[re.Pattern[str], str]
@@ -44,7 +44,7 @@ def compile_pattern(pattern: str) -> re.Pattern[str]:
 
 def is_ignored(
     logger: BeetsLogger,
-    ignore_patterns: GenreIgnorePatterns,
+    ignore_patterns: IgnorePatternsByArtist,
     genre: str,
     artist: str | None = None,
 ) -> bool:
