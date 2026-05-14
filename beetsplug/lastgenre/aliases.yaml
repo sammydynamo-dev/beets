@@ -40,6 +40,8 @@ downtempo:
 shoegaze:
     - shoegaze?r?
     - shoegazing
+nu skool breaks:
+    - breaks  # https://www.last.fm/tag/breaks/wiki
 
 # Spacing: hip hop, trip hop, etc.
 \g<1> hop:
