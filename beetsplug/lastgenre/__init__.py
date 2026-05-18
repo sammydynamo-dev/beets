@@ -116,49 +116,7 @@ def sort_by_depth(tags: list[str], branches: CanonTree) -> list[str]:
 
 WHITELIST = os.path.join(os.path.dirname(__file__), "genres.txt")
 C14N_TREE = os.path.join(os.path.dirname(__file__), "genres-tree.yaml")
-
-# Default genre aliases for normalization.
-# [[[doc:ALIASES_DEFAULT]]]
-ALIASES_DEFAULT: dict[str, list[str]] = {
-    "drum and bass": ["d(rum)?[ &n/]*b(ass)?"],
-    "rhythm and blues": ["r(hythm)?[ &n/]*b(lues)?"],
-    "rock and roll": ["rock[ '\u2010&n/-]*roll"],
-    r"\g<1>-\g<2>": ["(c|k|j) *(folk|goth|pop|rock|ska|trance)"],
-    r"post-\g<1>": [r"post +(\w+)"],
-    "lo-fi": ["(g?lo) *fi"],
-    r"\g<1>-funk": ["(p|g) *funk"],
-    r"synth\g<1>": [r"synth[ -]+(\w+)"],
-    "avant-garde": [
-        "avant *(gard(e)?)?",
-        "avant-gard",
-        "avant",
-    ],
-    r"nu \g<1>": ["nu[ -]*(disco|jazz|metal|soul)"],
-    "electronic": ["electronic music"],
-    "world music": ["world"],
-    "chillout": ["chill([ -]*out)?"],
-    "darkwave": ["dark[ -]*wave"],
-    "downtempo": ["down[ -]*beat"],
-    "shoegaze": ["shoegaze?r?", "shoegazing"],
-    r"\g<1> hop": ["(glitch|hip|jazz|trip)y?([ -]*hip)?[ -]*hop"],
-    "blues rock": ["blues[ -]*rock"],
-    "folk rock": ["folk[ -]*rock"],
-    "alternative rock": [
-        "alt([ -]*rock)?",
-        "alternative([ -]*rock)?",
-    ],
-    "indie rock": ["indie([ -]*rock)?"],
-    "gothic rock": [
-        "goth(?!ic)([ -]*rock)?",
-        "gothic[ -]*rock",
-    ],
-    "progressive rock": [
-        "prog([ -]*rock)?",
-        "progressive[ -]*rock",
-    ],
-    "traditional folk": ["trad(/|ition(/|al)?)?-?"],
-}
-# [[[end:ALIASES_DEFAULT]]]
+ALIASES_FILE = os.path.join(os.path.dirname(__file__), "aliases.yaml")
 
 
 class LastGenrePlugin(plugins.BeetsPlugin):
@@ -182,7 +140,7 @@ class LastGenrePlugin(plugins.BeetsPlugin):
                 "pretend": False,
                 "ignorelist": {},
                 "enable_aliases": True,
-                "aliases": ALIASES_DEFAULT,
+                "aliases": ALIASES_FILE,
             }
         )
         self.setup()
@@ -294,8 +252,8 @@ class LastGenrePlugin(plugins.BeetsPlugin):
     def _load_aliases(self) -> list[AliasPatternWithReplacement]:
         """Load the genre alias table from the beets config.
 
-        Reads ``lastgenre.aliases`` as a mapping of genre names to lists of
-        regex patterns. The default table is ``ALIASES_DEFAULT``.
+        Reads ``lastgenre.aliases`` as a file path or an inline mapping of
+        genre names to lists of regex patterns. Defaults to ``aliases.yaml``.
         Set ``enable_aliases: no`` to disable normalization entirely.
 
         The key (genre name) is used as a ``re.Match.expand()`` template,
@@ -308,9 +266,15 @@ class LastGenrePlugin(plugins.BeetsPlugin):
         if not self.config["enable_aliases"].get(bool):
             return []
 
-        aliases_dict = self.config["aliases"].get(
-            confuse.MappingValues(confuse.Sequence(str))
-        )
+        aliases_value = self.config["aliases"].get()
+        if isinstance(aliases_value, str):
+            self._log.debug("Loading aliases from {}", aliases_value)
+            with Path(aliases_value).expanduser().open(encoding="utf-8") as f:
+                aliases_dict = yaml.safe_load(f)
+        else:
+            aliases_dict = self.config["aliases"].get(
+                confuse.MappingValues(confuse.Sequence(str))
+            )
 
         entries: list[AliasPatternWithReplacement] = []
         for canonical, patterns in aliases_dict.items():

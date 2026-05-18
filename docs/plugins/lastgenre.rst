@@ -233,10 +233,8 @@ turn it off entirely.
 
 The full default list is shown below:
 
-.. literalinclude:: ../../beetsplug/lastgenre/__init__.py
-    :language: python
-    :start-after: # [[[doc:ALIASES_DEFAULT]]]
-    :end-before: # [[[end:ALIASES_DEFAULT]]]
+.. literalinclude:: ../../beetsplug/lastgenre/aliases.yaml
+    :language: yaml
 
 You can override these aliases in your configuration. The keys are the canonical
 genre names (which support ``\g<1>`` back-references to regex capture groups)
@@ -319,10 +317,9 @@ file. The available options are:
   ``no``.
 - **enable_aliases**: Enable genre alias normalization. Set to ``no`` to
   disable. Default: ``yes``.
-- **aliases**: A mapping of canonical genre names to lists of regex patterns
-  used for alias normalization. Overrides the built-in ``ALIASES_DEFAULT`` table
-  entirely. See `Genre Normalization (Aliases)`_ for details. Default: built-in
-  table.
+- **aliases**: A path to a YAML file, or an inline mapping of canonical genre
+  names to lists of regex patterns used for alias normalization. See `Genre
+  Normalization (Aliases)`_ for details. Default: built-in ``aliases.yaml``.
 
 Running Manually
 ----------------

@@ -1071,7 +1071,7 @@ class TestAliases:
         """Verify that bundled aliases.yaml correctly handles common variants."""
         config["lastgenre"]["ignorelist"] = False
         config["lastgenre"]["enable_aliases"] = True
-        config["lastgenre"]["aliases"] = lastgenre.ALIASES_DEFAULT
+        config["lastgenre"]["aliases"] = lastgenre.ALIASES_FILE
         plugin = lastgenre.LastGenrePlugin()
         result = normalize_genre(
             plugin._log, plugin.alias_patterns, input_genre
