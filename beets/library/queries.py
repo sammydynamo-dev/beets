@@ -26,7 +26,6 @@ def parse_query_parts(parts, model_cls):
 
     query, sort = dbcore.parse_sorted_query(model_cls, parts)
     log.debug("Parsed query: {!r}", query)
-    log.debug("Parsed sort: {!r}", sort)
     return query, sort
 
 
