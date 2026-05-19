@@ -226,34 +226,26 @@ uses an ordered list of regular expression aliases to map these variants to a
 single canonical name *before* any other filtering or canonicalization takes
 place.
 
-This feature is enabled by default (``enable_aliases: yes``) and uses a bundled
-default alias table, which covers many common cases, such as mapping "dnb" to
-"drum and bass" or "r&b" to "rhythm and blues". Set ``enable_aliases: no`` to
-turn it off entirely.
-
-The full default list is shown below:
-
-.. literalinclude:: ../../beetsplug/lastgenre/aliases.yaml
-    :language: yaml
+This feature is enabled by default (``enable_aliases: yes``) and uses the
+built-in ``aliases.yaml`` file as its default alias table, which covers many
+common cases, such as mapping "dnb" to "drum and bass" or "r&b" to "rhythm and
+blues". Set ``enable_aliases: no`` to turn it off entirely.
 
 You can override these aliases in your configuration. The keys are the canonical
 genre names (which support ``\g<1>`` back-references to regex capture groups)
-and the values are lists of regex patterns:
-
-::
-
-    lastgenre:
-        aliases:
-            drum and bass:
-                - d(rum)?[ &n/]*b(ass)?
-            \g<1> hop:
-                - (glitch|hip|jazz|trip)y?[ /-]*hop
+and the values are lists of regex patterns.
 
 .. note::
 
     The same formatting and quoting rules regarding YAML special characters and
-    backslashes apply here as well. See the **Attention** box in the **Genre
-    Ignorelist** section above for details.
+    backslashes mentioned in the **Attention** box in the **Genre Ignorelist**
+    section apply here as well.
+
+The full default mappings are shown below - copy and paste this into your config
+below the ``lastgenre.aliases`` section to customize it:
+
+.. literalinclude:: ../../beetsplug/lastgenre/aliases.yaml
+    :language: yaml
 
 Choosing the Right Tool
 -----------------------
