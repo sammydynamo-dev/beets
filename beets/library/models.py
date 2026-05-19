@@ -35,7 +35,7 @@ from .queries import parse_query_string
 
 if TYPE_CHECKING:
     from beets.dbcore.query import FieldQuery, FieldQueryType
-    from beets.dbcore.sort import FieldSort
+    from beets.dbcore.sort import FieldSort, Sort
 
     from .library import Library  # noqa: F401
 
@@ -71,6 +71,15 @@ class LibModel(dbcore.Model["Library"]):
     @cached_classproperty
     def writable_media_fields(cls) -> set[str]:
         return set(MediaFile.fields()) & cls._fields.keys()
+
+    @cached_classproperty
+    def default_sort(cls) -> Sort:
+        """Get a :class:`beets.dbcore.sort.Sort` for configured fields."""
+        config_key = f"sort_{cls.__name__.lower()}"
+        return dbcore.sort_from_strings(
+            cls,  # type: ignore[arg-type]
+            beets.config[config_key].as_str_seq(),
+        )
 
     @property
     def filepath(self) -> Path:
