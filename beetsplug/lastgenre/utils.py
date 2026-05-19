@@ -30,18 +30,6 @@ if TYPE_CHECKING:
     """A compiled alias regex paired with replacement template string."""
 
 
-def compile_pattern(pattern: str) -> re.Pattern[str]:
-    """Compile *pattern* as a case-insensitive regex.
-
-    Falls back to a literal (``re.escape``'d) pattern when *pattern* is not
-    valid regex syntax.
-    """
-    try:
-        return re.compile(pattern, re.IGNORECASE)
-    except re.error:
-        return re.compile(re.escape(pattern), re.IGNORECASE)
-
-
 def is_ignored(
     logger: BeetsLogger,
     ignore_patterns: IgnorePatternsByArtist,
