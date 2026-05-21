@@ -268,7 +268,28 @@ Configuration
 -------------
 
 To configure the plugin, make a ``lastgenre:`` section in your configuration
-file. The available options are:
+file. Default configuration:
+
+.. code-block:: yaml
+
+    lastgenre:
+        auto: yes
+        canonical: no
+        cleanup_existing: no
+        count: 1
+        fallback: null
+        force: no
+        keep_existing: no
+        min_weight: 10
+        prefer_specific: no
+        source: album
+        whitelist: yes
+        title_case: yes
+        ignorelist: no
+        enable_aliases: yes
+        aliases: null  # built-in aliases.yaml
+
+The available options are:
 
 - **auto**: Fetch genres automatically during import. Default: ``yes``.
 - **canonical**: Use a canonicalization tree. Setting this to ``yes`` will use a
