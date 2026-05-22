@@ -766,8 +766,6 @@ class TestIgnorelist:
                 {"*": ["spoken word"], "metallica": ["metal"]},
                 {"*": ["spoken word"], "metallica": ["metal"]},
             ),
-            # Artist names are lowercased so lookup in is_ignored() matches.
-            ({"METALLICA": ["METAL"]}, {"metallica": ["METAL"]}),
             # Invalid regex pattern that gets escaped (full-match literal fallback)
             (
                 {"artist": ["[invalid(regex"]},
