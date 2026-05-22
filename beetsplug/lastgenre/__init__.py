@@ -136,8 +136,7 @@ class LastGenrePlugin(plugins.BeetsPlugin):
                 "title_case": True,
                 "pretend": False,
                 "ignorelist": {},
-                "enable_aliases": True,
-                "aliases": ALIASES_FILE,
+                "aliases": True,
             }
         )
         self.setup()
@@ -256,39 +255,53 @@ class LastGenrePlugin(plugins.BeetsPlugin):
     def _load_aliases(self) -> list[AliasPatternWithReplacement]:
         """Load the genre alias table from the beets config.
 
-        Reads ``lastgenre.aliases`` as a file path or an inline mapping of
-        genre names to lists of regex patterns. Defaults to ``aliases.yaml``.
-        Set ``enable_aliases: no`` to disable normalization entirely.
+        ``lastgenre.aliases`` is a tri-state option:
+
+        - ``yes`` (default): load the built-in aliases.
+        - ``no``: disable alias normalization entirely.
+        - mapping: an inline dict of canonical genre names to lists of regex
+          patterns.
 
         The key (genre name) is used as a ``re.Match.expand()`` template,
         so ``\\g<N>`` back-references to capture groups are supported.
 
         Raises:
-            confuse.ConfigTypeError: when the config value is not a mapping
-            or a list entry is not a string.
+            confuse.ConfigTypeError: when the config value is not a bool or
+            mapping, or when a mapping value is not a list.
             re.error: when a pattern is not valid regex syntax.
         """
-        if not self.config["enable_aliases"].get(bool):
+        aliases_config = self.config["aliases"].get()
+        if aliases_config is False:
             return []
 
-        aliases_value = self.config["aliases"].get()
-        if isinstance(aliases_value, str):
-            self._log.debug("Loading aliases from {}", aliases_value)
-            with Path(aliases_value).expanduser().open(encoding="utf-8") as f:
-                aliases_dict = yaml.safe_load(f)
-        else:
-            aliases_dict = self.config["aliases"].get(
-                confuse.MappingValues(confuse.Sequence(str))
+        # Define view with either built-in or user-configured
+        aliases_view = confuse.Configuration(
+            self.config["aliases"].name, read=False
+        )
+        if aliases_config in (True, "", None):
+            self._log.debug("Loading built-in aliases")
+            with Path(ALIASES_FILE).open(encoding="utf-8") as f:
+                aliases_view.set(yaml.safe_load(f))
+        elif not isinstance(aliases_config, dict):
+            raise confuse.ConfigTypeError(
+                f"{self.config['aliases'].name} must be a dict or bool."
             )
+        else:
+            aliases_view.set(aliases_config)
 
-        entries: list[AliasPatternWithReplacement] = []
-        for canonical, patterns in aliases_dict.items():
-            template = canonical.lower()
+        # Parse and compile. Raise for invalid regex!
+        raw_aliases = aliases_view.get(
+            confuse.MappingValues(confuse.Sequence(str))
+        )
+        compiled_aliases: list[AliasPatternWithReplacement] = []
+        for canonical, patterns in raw_aliases.items():
             for raw_pat in patterns:
-                entries.append((re.compile(raw_pat, re.IGNORECASE), template))
+                compiled_aliases.append(
+                    (re.compile(raw_pat, re.IGNORECASE), canonical.lower())
+                )
 
-        self._log.extra_debug("Loaded {} alias entries", len(entries))
-        return entries
+        self._log.debug("Loaded {} alias entries", len(compiled_aliases))
+        return compiled_aliases
 
     @property
     def sources(self) -> tuple[str, ...]:

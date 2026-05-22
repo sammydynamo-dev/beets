@@ -226,14 +226,14 @@ uses an ordered list of regular expression aliases to map these variants to a
 single canonical name *before* any other filtering or canonicalization takes
 place.
 
-This feature is enabled by default (``enable_aliases: yes``) and uses the
-built-in ``aliases.yaml`` file as its default alias table, which covers many
-common cases, such as mapping "dnb" to "drum and bass" or "r&b" to "rhythm and
-blues". Set ``enable_aliases: no`` to turn it off entirely.
+This feature is enabled by default and uses a built-in alias table that covers
+many common cases, such as mapping "dnb" to "drum and bass" or "r&b" to "rhythm
+and blues". Set ``aliases: no`` to turn it off entirely.
 
-You can override these aliases in your configuration. The keys are the canonical
-genre names (which support ``\g<1>`` back-references to regex capture groups)
-and the values are lists of regex patterns.
+You can replace these aliases with your own by setting ``aliases`` to an inline
+mapping in your configuration. The keys are the canonical genre names (which
+support ``\g<1>`` back-references to regex capture groups) and the values are
+lists of regex patterns.
 
 .. note::
 
@@ -286,8 +286,7 @@ file. Default configuration:
         whitelist: yes
         title_case: yes
         ignorelist: no
-        enable_aliases: yes
-        aliases: null  # built-in aliases.yaml
+        aliases: yes
 
 The available options are:
 
@@ -328,11 +327,11 @@ The available options are:
 - **ignorelist**: A mapping of artist names (or the global ``'*'`` key) to lists
   of genres to exclude. See `Genre Ignorelist`_ for more details. Default:
   ``no``.
-- **enable_aliases**: Enable genre alias normalization. Set to ``no`` to
-  disable. Default: ``yes``.
-- **aliases**: A path to a YAML file, or an inline mapping of canonical genre
-  names to lists of regex patterns used for alias normalization. See `Genre
-  Normalization (Aliases)`_ for details. Default: built-in ``aliases.yaml``.
+- **aliases**: Controls genre alias normalization. Set to ``yes`` (default) to
+  use the built-in alias table, ``no`` to disable normalization entirely, or an
+  inline mapping of canonical genre names to lists of regex patterns to replace
+  the built-in table with your own. See `Genre Normalization (Aliases)`_ for
+  details.
 
 Running Manually
 ----------------

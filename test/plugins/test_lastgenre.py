@@ -897,10 +897,7 @@ class TestAliases:
         ],
     )
     def test_normalize_genre(
-        self,
-        aliases_dict: dict[str, list[str]],
-        genre: str,
-        expected: str,
+        self, aliases_dict: dict[str, list[str]], genre: str, expected: str
     ) -> None:
         """Test normalize_genre() with static and template canonical names."""
         alias_patterns = [
@@ -992,9 +989,7 @@ class TestAliases:
         config["lastgenre"]["aliases"] = {"hip hop": ["hip-hop"]}
         plugin = lastgenre.LastGenrePlugin()
         plugin.setup()
-        plugin.ignore_patterns = {
-            "*": [re.compile("hip hop", re.IGNORECASE)],
-        }
+        plugin.ignore_patterns = {"*": [re.compile("hip hop", re.IGNORECASE)]}
 
         result = plugin._resolve_genres(["hip-hop"])
         assert result == [], (
@@ -1002,11 +997,11 @@ class TestAliases:
         )
 
     def test_disabled(self, config):
-        """With enable_aliases: false, no normalization is performed."""
+        """With aliases: false, no normalization is performed."""
         config["lastgenre"]["ignorelist"] = (
             False  # prevent state leak from earlier tests
         )
-        config["lastgenre"]["enable_aliases"] = False
+        config["lastgenre"]["aliases"] = False
         plugin = lastgenre.LastGenrePlugin()
         assert plugin.alias_patterns == []
         # normalize_genre with an empty list must return the genre unchanged.
@@ -1068,8 +1063,6 @@ class TestAliases:
     def test_default_aliases_logic(self, config, input_genre, expected_genre):
         """Verify that bundled aliases.yaml correctly handles common variants."""
         config["lastgenre"]["ignorelist"] = False
-        config["lastgenre"]["enable_aliases"] = True
-        config["lastgenre"]["aliases"] = lastgenre.ALIASES_FILE
         plugin = lastgenre.LastGenrePlugin()
         result = normalize_genre(
             plugin._log, plugin.alias_patterns, input_genre
