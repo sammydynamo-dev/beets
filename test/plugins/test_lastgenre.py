@@ -919,9 +919,6 @@ class TestAliases:
 
     def test_aliases_config_format(self, config):
         """Test _load_aliases() loading from inline config dict."""
-        config["lastgenre"]["ignorelist"] = (
-            False  # prevent state leak from earlier tests
-        )
         # Multi-pattern list: proves all patterns are loaded, not just the first
         config["lastgenre"]["aliases"] = {"hip hop": ["hip-hop", "hiphop"]}
         plugin = lastgenre.LastGenrePlugin()
@@ -949,9 +946,6 @@ class TestAliases:
         self, config, invalid_config, expected_error
     ):
         """Test that invalid aliases config values raise confuse.ConfigTypeError."""
-        config["lastgenre"]["ignorelist"] = (
-            False  # prevent state leak from earlier tests
-        )
         config["lastgenre"]["aliases"] = invalid_config
         with pytest.raises(confuse.ConfigTypeError) as exc_info:
             lastgenre.LastGenrePlugin()
@@ -963,9 +957,6 @@ class TestAliases:
         'hip-hop' is not on the whitelist but 'hip hop' is.  With aliases
         enabled the tag must survive whitelist filtering.
         """
-        config["lastgenre"]["ignorelist"] = (
-            False  # prevent state leak from earlier tests
-        )
         config["lastgenre"]["aliases"] = {"hip hop": ["hip-hop", "hiphop"]}
         plugin = lastgenre.LastGenrePlugin()
         plugin.setup()
@@ -983,9 +974,6 @@ class TestAliases:
         If 'hip hop' is ignored but 'hip-hop' is fed in, the alias fires first
         so the result is empty (correctly ignored).
         """
-        config["lastgenre"]["ignorelist"] = (
-            False  # prevent state leak from earlier tests
-        )
         config["lastgenre"]["aliases"] = {"hip hop": ["hip-hop"]}
         plugin = lastgenre.LastGenrePlugin()
         plugin.setup()
@@ -998,9 +986,6 @@ class TestAliases:
 
     def test_disabled(self, config):
         """With aliases: false, no normalization is performed."""
-        config["lastgenre"]["ignorelist"] = (
-            False  # prevent state leak from earlier tests
-        )
         config["lastgenre"]["aliases"] = False
         plugin = lastgenre.LastGenrePlugin()
         assert plugin.alias_patterns == []
@@ -1062,7 +1047,6 @@ class TestAliases:
     )
     def test_default_aliases_logic(self, config, input_genre, expected_genre):
         """Verify that bundled aliases.yaml correctly handles common variants."""
-        config["lastgenre"]["ignorelist"] = False
         plugin = lastgenre.LastGenrePlugin()
         result = normalize_genre(
             plugin._log, plugin.alias_patterns, input_genre
