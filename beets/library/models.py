@@ -207,12 +207,11 @@ class FormattedItemMapping(dbcore.db.FormattedMapping):
         """
         if self.for_path and key in self.album_keys:
             return self._get_formatted(self.album, key)
-        elif key in self.model_keys:
+        if key in self.model_keys:
             return self._get_formatted(self.model, key)
-        elif key in self.album_keys:
+        if key in self.album_keys:
             return self._get_formatted(self.album, key)
-        else:
-            raise KeyError(key)
+        raise KeyError(key)
 
     def __getitem__(self, key):
         """Get the value for a key.
@@ -228,7 +227,7 @@ class FormattedItemMapping(dbcore.db.FormattedMapping):
         try:
             if key == "artist" and not value:
                 return self._get("albumartist")
-            elif key == "albumartist" and not value:
+            if key == "albumartist" and not value:
                 return self._get("artist")
         except KeyError:
             pass
@@ -537,7 +536,7 @@ class Album(LibModel):
         if oldart and samefile(path, oldart):
             # Art already set.
             return
-        elif samefile(path, artdest):
+        if samefile(path, artdest):
             # Art already in place.
             self.artpath = path
             return
@@ -1305,8 +1304,7 @@ class DefaultTemplateFunctions:
 
         if condition:
             return trueval
-        else:
-            return falseval
+        return falseval
 
     @staticmethod
     def tmpl_asciify(s):
@@ -1521,5 +1519,4 @@ class DefaultTemplateFunctions:
         """
         if field in self.item:
             return trueval if trueval else self.item.formatted().get(field)
-        else:
-            return falseval
+        return falseval

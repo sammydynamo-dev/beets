@@ -536,12 +536,11 @@ class TrackInfo(Info):
             if not raw_track[k] and (v := album.get(k)):
                 track[k] = v
 
-        merged = (
+        return (
             album_info.item_data
             | {"tracktotal": len(album_info.tracks)}
             | track.item_data
         )
-        return merged
 
 
 # Structures that compose all the information for a candidate match.
