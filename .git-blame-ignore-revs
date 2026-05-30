@@ -183,3 +183,9 @@ d4fd36a03384b0f71144932833d9c633c1f9545f
 0cd20798aa585f162433423f767c047b7474a70e
 # Reformat using skip-magic-trailing-comma
 adfb73b66dba0fc799880af176ef6f9ac0a7ee68
+# Enable and fix flake8-pie
+9ee5776802269914a6a4b9eb5fa62b1fd3920fa2
+# Enable and fix flake8-return
+203e0fe08475a1a2be7af51ef037005587523de2
+# Enable and fix flake8-builtins
+d6c78bd49cfae0aeee17253d2a8b01bef9ae6d25
