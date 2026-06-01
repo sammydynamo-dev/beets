@@ -194,9 +194,6 @@ class ImportSession:
         task.duplicate_action = DuplicateAction(
             self.get_duplicate_action_value(task, found_duplicates)
         )
-        if task.duplicate_action is DuplicateAction.SKIP:
-            # Skip new.
-            task.set_choice(Action.SKIP)
 
     def choose_item(self, task: ImportTask):
         raise NotImplementedError
