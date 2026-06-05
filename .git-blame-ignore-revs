@@ -197,3 +197,9 @@ adfb73b66dba0fc799880af176ef6f9ac0a7ee68
 ca8544d4bcab503e1e4c2cd6688655c8211aa7a1
 # Fix autobpm tests
 5804a21620098e8da78b1f4a5f85063033586632
+# Preserve importer config views
+b97f88c53732c6542aeb057bf866ac66f152ab17
+# Type _reduce_and_log
+7b348a7ce9daa62b067a453c3cf4f97d1e602281
+# Add missing types to beets.importer
+314c39fe45f789e91256aa2c7b61e1e9eca03cb6
